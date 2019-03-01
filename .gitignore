@@ -1,0 +1,21 @@
+# use glob syntax.
+syntax: glob
+*.class
+*~
+*.bak
+*.off
+*.old
+
+# Eclipse
+.classpath
+.project
+.settings
+
+com.gam.urcap.programmonitor/.settings/
+com.gam.urcap.programmonitor/.gitignore
+com.gam.urcap.programmonitor/target/classes/
+com.gam.urcap.programmonitor/target/test-classes/
+com.gam.urcap.programmonitor/target/generated-sources/
+com.gam.urcap.programmonitor/target/generated-test-sources/
+com.gam.urcap.programmonitor/target/maven-status/
+com.gam.urcap.programmonitor/target/surefire-reports/

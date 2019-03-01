@@ -7,7 +7,7 @@
 
 	<groupId>com.gam.urcap</groupId>
 	<artifactId>programmonitor</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>0.1</version>
 	<name>programmonitor</name>
 	<packaging>bundle</packaging>
 
@@ -19,10 +19,10 @@
 		<!--********************************************************************-->
 		<!--******************* BEGINNING OF URCAP META DATA *******************-->
 		<urcap.symbolicname>com.gam.urcap.programmonitor</urcap.symbolicname>
-		<urcap.vendor>URCaps R us Inc.</urcap.vendor>
-		<urcap.contactAddress>123 URCap Street</urcap.contactAddress>
+		<urcap.vendor>UR Global Applications Management</urcap.vendor>
+		<urcap.contactAddress>Energivej 25, 5260 Odense S, Denmark</urcap.contactAddress>
 		<urcap.copyright>Copyright notice (C)</urcap.copyright>
-		<urcap.description>This is a description of the URCap</urcap.description>
+		<urcap.description>This a sample URCap project, that measures the working range of the robot.</urcap.description>
 		<urcap.licenseType>License type</urcap.licenseType>
 		<!--********************** END OF URCAP META DATA **********************-->
 		<!--********************************************************************-->

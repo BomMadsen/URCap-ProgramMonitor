@@ -13,14 +13,12 @@ public class ProgramMonitorInstallationNodeService implements SwingInstallationN
 
 	@Override
 	public void configureContribution(ContributionConfiguration configuration) {
-		// TODO Auto-generated method stub
-		
+		// No configuration is necessary here
 	}
 
 	@Override
 	public String getTitle(Locale locale) {
-		// TODO Auto-generated method stub
-		return null;
+		return "Program Monitor";
 	}
 
 	@Override

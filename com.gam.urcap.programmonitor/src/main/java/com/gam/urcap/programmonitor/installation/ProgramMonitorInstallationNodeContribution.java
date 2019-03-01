@@ -1,5 +1,6 @@
 package com.gam.urcap.programmonitor.installation;
 
+import com.gam.urcap.programmonitor.daemon.ProgramMonitorDaemonService;
 import com.ur.urcap.api.contribution.InstallationNodeContribution;
 import com.ur.urcap.api.contribution.installation.InstallationAPIProvider;
 import com.ur.urcap.api.domain.script.ScriptWriter;
@@ -8,6 +9,7 @@ public class ProgramMonitorInstallationNodeContribution implements InstallationN
 
 	private final InstallationAPIProvider apiProvider;
 	private final ProgramMonitorInstallationNodeView view;
+	private final ProgramMonitorDaemonService programMonitorDaemonService;
 	
 	/*****
 	 * BEWARE! 
@@ -21,9 +23,11 @@ public class ProgramMonitorInstallationNodeContribution implements InstallationN
 	private boolean ENABLE_PROGRAM_MONITORING = false;
 	
 	public ProgramMonitorInstallationNodeContribution(InstallationAPIProvider apiProvider,
-			ProgramMonitorInstallationNodeView view) {
+			ProgramMonitorInstallationNodeView view, 
+			ProgramMonitorDaemonService programMonitorDaemon) {
 		this.apiProvider = apiProvider;
 		this.view = view;
+		this.programMonitorDaemonService = programMonitorDaemon;
 	}
 	
 	@Override

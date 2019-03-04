@@ -3,6 +3,8 @@
 
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 
+global gotAnyData
+
 global xmax
 global xmin
 global ymax
@@ -15,6 +17,7 @@ global max_reset
 
 min_reset = 10000
 max_reset = -10000
+gotAnyData = False
 
 def resetResults():
     print "Resetting values"
@@ -24,6 +27,7 @@ def resetResults():
     xmin = min_reset
     ymin = min_reset
     zmin = min_reset
+    gotAnyData = False
 
 def getResult(type):
     value = None
@@ -44,6 +48,7 @@ def getResult(type):
 
 def setResult(type, value):
     print "Setting ", type, " to ", value
+    gotAnyData = True
     if(type=="xmax"):
         xmax = value
     elif(type=="xmin"):

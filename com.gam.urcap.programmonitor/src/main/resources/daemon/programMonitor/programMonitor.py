@@ -11,6 +11,7 @@ global ymax
 global ymin
 global zmax
 global zmin
+global speedmax
 
 global min_reset
 global max_reset
@@ -27,6 +28,7 @@ def resetResults():
     xmin = min_reset
     ymin = min_reset
     zmin = min_reset
+    speedmax = 0
     gotAnyData = False
 
 def getResult(type):
@@ -43,6 +45,8 @@ def getResult(type):
         value = zmax
     elif(type=="zmin"):
         value = zmin
+    elif(type=="speedmax"):
+        value = speedmax
     print "Returning ", type, " as ", value
     return value
 
@@ -62,10 +66,13 @@ def setResult(type, value):
     elif(type=="zmin"):
         zmin = value
 
+def hasMonitored():
+    return gotAnyData
 
 print "Opening XML-RPC Server"
 server = SimpleXMLRPCServer(("", 23444), allow_none=True)
 server.register_function(resetResults, "resetResults")
 server.register_function(getResult, "getResult")
 server.register_function(setResult, "setResult")
+server.register_function(hasMonitored, "hasMonitored")
 server.serve_forever() 

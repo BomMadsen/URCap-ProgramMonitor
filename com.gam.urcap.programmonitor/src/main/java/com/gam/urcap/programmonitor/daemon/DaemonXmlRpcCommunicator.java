@@ -15,16 +15,17 @@ public class DaemonXmlRpcCommunicator {
 	private static final String HOST = "127.0.0.1";
 	private static final int PORT_DEFAULT = 23444;
 	
-	public enum RESULT{
+	public enum RESULT_TYPE{
 		X_MAX("xmax"),
 		X_MIN("xmin"),
 		Y_MAX("ymax"),
 		Y_MIN("ymin"),
 		Z_MAX("zmax"),
-		Z_MIN("zmin");
+		Z_MIN("zmin"),
+		SPEED_MAX("speedmax");
 		
 		private String id;
-		RESULT(String id){
+		RESULT_TYPE(String id){
 			this.id = id;
 		}
 		String getID() {
@@ -54,7 +55,7 @@ public class DaemonXmlRpcCommunicator {
 		return client;
 	}
 	
-	public double getResult(RESULT type) {
+	public double getResult(RESULT_TYPE type) {
 		ArrayList<String> args = new ArrayList<String>();
 		args.add(type.getID());
 		double result = 0;
@@ -64,6 +65,16 @@ public class DaemonXmlRpcCommunicator {
 			System.out.println("Caught XMLRPC exception in getResult");
 		}
 		return result;
+	}
+	
+	public boolean hasMonitored() {
+		boolean monitored = false;
+		try {
+			monitored = (Boolean) client.execute("hasMonitored", new ArrayList<String>());
+		} catch (XmlRpcException e) {
+			System.out.println("Caught XMLRPC exception");
+		}
+		return monitored;
 	}
 	
 }

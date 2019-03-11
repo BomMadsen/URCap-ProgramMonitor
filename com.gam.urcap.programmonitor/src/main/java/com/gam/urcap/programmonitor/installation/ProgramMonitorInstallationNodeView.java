@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -11,7 +12,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 
+import com.gam.urcap.programmonitor.monitoring.AxisExtremity;
+import com.gam.urcap.programmonitor.monitoring.ResultSet;
 import com.ur.urcap.api.contribution.ViewAPIProvider;
 import com.ur.urcap.api.contribution.installation.swing.SwingInstallationNodeView;
 
@@ -34,6 +38,11 @@ public class ProgramMonitorInstallationNodeView implements SwingInstallationNode
 	private JButton ENABLE_MONITORING_BUTTON = new JButton();
 	private JButton DISABLE_MONITORING_BUTTON = new JButton();
 	private JLabel DAEMON_STATUS_LABEL = new JLabel();
+	
+	/*****
+	 * Results panel UI components
+	 */
+	private JPanel RESULTS_DATA_PANEL = new JPanel();
 	
 	@Override
 	public void buildUI(JPanel panel, ProgramMonitorInstallationNodeContribution contribution) {
@@ -59,6 +68,14 @@ public class ProgramMonitorInstallationNodeView implements SwingInstallationNode
 		DAEMON_STATUS_LABEL.setText(status);
 	}
 	
+	public void setResultSet(ResultSet resultSet) {
+		if(resultSet.isResolved()) {
+			RESULTS_PANEL.remove(RESULTS_DATA_PANEL);
+			RESULTS_DATA_PANEL = createResultsDataPanel(resultSet);
+			RESULTS_PANEL.add(RESULTS_DATA_PANEL);
+		}
+	}
+	
 	private void buildConfigurationTab(ProgramMonitorInstallationNodeContribution contribution) {
 		CONFIGURATION_PANEL.setLayout(new BoxLayout(CONFIGURATION_PANEL, BoxLayout.Y_AXIS));
 		
@@ -72,7 +89,13 @@ public class ProgramMonitorInstallationNodeView implements SwingInstallationNode
 	}
 	
 	private void buildResultsTab(ProgramMonitorInstallationNodeContribution contribution) {
+		RESULTS_PANEL.setLayout(new BoxLayout(RESULTS_PANEL, BoxLayout.Y_AXIS));
 		
+		RESULTS_PANEL.add(createVerticalSpacer(15));
+		RESULTS_PANEL.add(createDescriptionLabelBox("This section shows the results of a monitoring session. "));
+		RESULTS_PANEL.add(createDescriptionLabelBox("Every time a new program is run in monitoring mode, this section is cleared and reset. "));
+		RESULTS_PANEL.add(createVerticalSpacer(15));
+		RESULTS_PANEL.add(RESULTS_DATA_PANEL);
 	}
 
 	private Box createEnableDisableButtonBox(JButton enableButton, JButton disableButton, 
@@ -113,6 +136,63 @@ public class ProgramMonitorInstallationNodeView implements SwingInstallationNode
 		return box;
 	}
 	
+	private JPanel createResultsDataPanel(ResultSet results) {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		
+		panel.add(createDataLineBox("Value", "Min", "Max", "Unit"));
+		
+		AxisExtremity xset = results.getX();
+		AxisExtremity yset = results.getY();
+		AxisExtremity zset = results.getZ();
+		
+		DecimalFormat df = new DecimalFormat("0.00");	// Use double-digit precision
+		
+		panel.add(createDataLineBox("X", df.format(xset.getMin()), df.format(xset.getMax()), "mm"));
+		panel.add(createDataLineBox("Y", df.format(yset.getMin()), df.format(yset.getMax()), "mm"));
+		panel.add(createDataLineBox("Z", df.format(zset.getMin()), df.format(zset.getMax()), "mm"));
+		
+		panel.add(createDataLineBox("Speed", "", df.format(results.getSpeedMax()), "mm/s"));
+		
+		return panel;
+	}
+	
+	private Box createDataLineBox(String col1, String col2, String col3, String col4) {
+		Box box = Box.createHorizontalBox();
+		box.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
+		JLabel label1 = new JLabel(col1);
+		JLabel label2 = new JLabel(col2);
+		JLabel label3 = new JLabel(col3);
+		JLabel label4 = new JLabel(col4);
+		
+		Dimension columnDimension = new Dimension(120, 30);
+		
+		label1.setHorizontalAlignment(SwingConstants.LEFT);
+		label2.setHorizontalAlignment(SwingConstants.RIGHT);
+		label3.setHorizontalAlignment(SwingConstants.RIGHT);
+		label4.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		label1.setPreferredSize(columnDimension);
+		label2.setPreferredSize(columnDimension);
+		label3.setPreferredSize(columnDimension);
+		label4.setPreferredSize(columnDimension);
+		
+		label1.setMaximumSize(columnDimension);
+		label2.setMaximumSize(columnDimension);
+		label3.setMaximumSize(columnDimension);
+		label4.setMaximumSize(columnDimension);
+		
+		box.add(label1);
+		box.add(createHorizontalSpacer(15));
+		box.add(label2);
+		box.add(label3);
+		box.add(createHorizontalSpacer(15));
+		box.add(label4);
+		
+		return box;
+	}
+	
 	private Box createStatusLabelBox(String description, JLabel status) {
 		Box box = Box.createHorizontalBox();
 		box.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -140,6 +220,10 @@ public class ProgramMonitorInstallationNodeView implements SwingInstallationNode
 	
 	private Component createVerticalSpacer(int height) {
 		return Box.createRigidArea(new Dimension(0, height));
+	}
+	
+	private Component createHorizontalSpacer(int width) {
+		return Box.createRigidArea(new Dimension(width, 0));
 	}
 	
 }

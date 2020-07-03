@@ -45,7 +45,7 @@ public class DaemonXmlRpcCommunicator {
 		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 		config.setEnabledForExtensions(true);
 		try {
-			config.setServerURL(new URL("http://" + host + ":" + port + "/RPC2"));
+			config.setServerURL(new URL("http://" + host + ":" + port));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -60,9 +60,13 @@ public class DaemonXmlRpcCommunicator {
 		args.add(type.getID());
 		double result = 0;
 		try {
-			result = (Double) client.execute("getResult", args);
+			Object res = client.execute("getResult", args);
+			if(res instanceof Double) {
+				result = (Double) res;
+			}
 		} catch (XmlRpcException e) {
 			System.out.println("Caught XMLRPC exception in getResult");
+			e.printStackTrace();
 		}
 		return result;
 	}
@@ -70,9 +74,13 @@ public class DaemonXmlRpcCommunicator {
 	public boolean hasMonitored() {
 		boolean monitored = false;
 		try {
-			monitored = (Boolean) client.execute("hasMonitored", new ArrayList<String>());
+			Object result = client.execute("hasMonitored", new ArrayList<String>());
+			if(result instanceof Boolean) {
+				monitored = (Boolean) result;
+			}
 		} catch (XmlRpcException e) {
 			System.out.println("Caught XMLRPC exception");
+			e.printStackTrace();
 		}
 		return monitored;
 	}

@@ -13,6 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.gam.urcap.programmonitor.monitoring.AxisExtremity;
 import com.gam.urcap.programmonitor.monitoring.ResultSet;
@@ -57,6 +59,8 @@ public class ProgramMonitorInstallationNodeView implements SwingInstallationNode
 		
 		buildConfigurationTab(contribution);
 		buildResultsTab(contribution);
+		
+		addChangeListenerToTabs(MASTER_TABS, contribution);
 	}
 	
 	public void setMonitoringEnabledState(boolean enabled) {
@@ -96,6 +100,21 @@ public class ProgramMonitorInstallationNodeView implements SwingInstallationNode
 		RESULTS_PANEL.add(createDescriptionLabelBox("Every time a new program is run in monitoring mode, this section is cleared and reset. "));
 		RESULTS_PANEL.add(createVerticalSpacer(15));
 		RESULTS_PANEL.add(RESULTS_DATA_PANEL);
+	}
+	
+	private void addChangeListenerToTabs(JTabbedPane tabbedPane,
+			final ProgramMonitorInstallationNodeContribution contribution) {
+		ChangeListener changeListener = new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JTabbedPane pane = (JTabbedPane) e.getSource();
+				int index = pane.getSelectedIndex();
+				if(index==1) {
+					contribution.userSwitchedToResultsTab();
+				}
+			}
+		};
+		tabbedPane.addChangeListener(changeListener);
 	}
 
 	private Box createEnableDisableButtonBox(JButton enableButton, JButton disableButton, 
@@ -148,11 +167,12 @@ public class ProgramMonitorInstallationNodeView implements SwingInstallationNode
 		
 		DecimalFormat df = new DecimalFormat("0.00");	// Use double-digit precision
 		
-		panel.add(createDataLineBox("X", df.format(xset.getMin()), df.format(xset.getMax()), "mm"));
-		panel.add(createDataLineBox("Y", df.format(yset.getMin()), df.format(yset.getMax()), "mm"));
-		panel.add(createDataLineBox("Z", df.format(zset.getMin()), df.format(zset.getMax()), "mm"));
+		// All values multiplied by 1000 to convert from SI (m) to display unit mm.
+		panel.add(createDataLineBox("X", df.format(xset.getMin()*1000), df.format(xset.getMax()*1000), "mm"));
+		panel.add(createDataLineBox("Y", df.format(yset.getMin()*1000), df.format(yset.getMax()*1000), "mm"));
+		panel.add(createDataLineBox("Z", df.format(zset.getMin()*1000), df.format(zset.getMax()*1000), "mm"));
 		
-		panel.add(createDataLineBox("Speed", "", df.format(results.getSpeedMax()), "mm/s"));
+		panel.add(createDataLineBox("Speed", "", df.format(results.getSpeedMax()*1000), "mm/s"));
 		
 		return panel;
 	}
